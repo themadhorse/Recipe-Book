@@ -4,6 +4,7 @@
         <hr>
         <ul class="list-group">
             <a class="list-group-item" style="cursor: pointer"
+            (click)="shoppingListService.ingredientSelected.next(ingredient)"
             *ngFor="let ingredient of ingredients">
             {{ ingredient.name }} <span class="pull-right">{{ ingredient.amount }}</span>
             </a>
