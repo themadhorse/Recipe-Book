@@ -10,7 +10,7 @@ export class ShoppingListService{
         new Ingredient("Apples", 5),
         new Ingredient("Vanilla Essence", 1)
       ];
-      indexToBeUpdated = 0;
+      indexToBeUpdated = -1;
 
       ingredientSelected = new Subject<Number>();
 
@@ -46,7 +46,8 @@ export class ShoppingListService{
       }
 
       deleteIngredient(){
-        this.ingredients.splice(-1, 1);
+        this.ingredients.splice(this.indexToBeUpdated, 1);
+        this.ingredientsChanged.next(this.ingredients.slice());
       }
 
       set updateIndex(upDatedIndex: number){
