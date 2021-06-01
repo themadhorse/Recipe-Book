@@ -10,20 +10,24 @@ export class ShoppingListService{
         new Ingredient("Apples", 5),
         new Ingredient("Vanilla Essence", 1)
       ];
-      
+      indexToBeUpdated = 0;
 
-      ingredientSelected = new Subject<Ingredient>();
+      ingredientSelected = new Subject<Number>();
 
       ingredientsChanged = new Subject<Ingredient[]>();
 
       getIngredients = () => this.ingredients.slice();
 
+      getIngredient(index: number): Ingredient {
+        return this.ingredients[index];
+      }
+
       addIngredient(ingredient: Ingredient, publishChanges = true, editMode = false){
         const index = this.ingredients.findIndex(ing => ing.name === ingredient.name);
-        if(editMode && index !== -1)
+        if(editMode)
         {
-          this.ingredients[index].name = ingredient.name;
-          this.ingredients[index].amount = ingredient.amount;
+          this.ingredients[this.indexToBeUpdated].name = ingredient.name;
+          this.ingredients[this.indexToBeUpdated].amount = ingredient.amount;
         }
         else{
         if(index === -1)
@@ -43,5 +47,9 @@ export class ShoppingListService{
 
       deleteIngredient(){
         this.ingredients.splice(-1, 1);
+      }
+
+      set updateIndex(upDatedIndex: number){
+        this.indexToBeUpdated = upDatedIndex;
       }
 }

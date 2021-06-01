@@ -17,12 +17,14 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   constructor(public shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
-    this.subscription = this.shoppingListService.ingredientSelected.subscribe((ingredient: Ingredient) => {
+    this.subscription = this.shoppingListService.ingredientSelected.subscribe((index: number) => {
+      let ingredient: Ingredient = this.shoppingListService.getIngredient(index);
       this.ingredientForm.setValue({
         'ingName': ingredient.name,
         'amount': ingredient.amount
       });
       this.editMode = true;
+      this.shoppingListService.updateIndex = index;
     });
   }
 

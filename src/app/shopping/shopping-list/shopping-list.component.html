@@ -4,8 +4,8 @@
         <hr>
         <ul class="list-group">
             <a class="list-group-item" style="cursor: pointer"
-            (click)="shoppingListService.ingredientSelected.next(ingredient)"
-            *ngFor="let ingredient of ingredients">
+            (click)="shoppingListService.ingredientSelected.next(i)"
+            *ngFor="let ingredient of ingredients; let i = index">
             {{ ingredient.name }} <span class="pull-right">{{ ingredient.amount }}</span>
             </a>
         </ul>
