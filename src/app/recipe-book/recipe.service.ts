@@ -28,11 +28,16 @@ export class RecipeService{
       }
 
       addRecipe(recipe: Recipe, id: number, editMode=false){
-        if(editMode){
-            this.recipes[id] = recipe;
-        } else {
-            this.recipes.push(recipe);
+            if(editMode){
+                this.recipes[id] = recipe;
+            } else {
+                this.recipes.push(recipe);
+            }
+            this.recipesChanged.next(this.recipes.slice());
         }
-        this.recipesChanged.next(this.recipes.slice());
-    }
+
+        deleteRecipe(index: number){
+            this.recipes.splice(index, 1);
+            this.recipesChanged.next(this.recipes.slice());
+        }
 }
