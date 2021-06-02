@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { Recipe } from '../recipe.model';
 
@@ -12,11 +13,17 @@ import { RecipeService } from '../recipe.service';
 export class RecipeListComponent implements OnInit {
   recipes: Recipe[];
   isTrue = false;
+  subscription: Subscription;
 
   constructor(public recipeService: RecipeService) { }
 
 
   ngOnInit(): void {
   this.recipes = this.recipeService.getRecipes();
+  this.subscription = this.recipeService.recipesChanged.subscribe(
+    (updatedRecipes: Recipe[]) => {
+        this.recipes = updatedRecipes;
+    }
+  );
   }
 }

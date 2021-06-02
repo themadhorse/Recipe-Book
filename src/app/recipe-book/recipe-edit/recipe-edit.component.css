@@ -6,3 +6,12 @@ button{
     position: relative;
     top: -2px;
 }
+
+input.ng-touched.ng-invalid,
+textarea.ng-touched.ng-invalid{
+    border: 1px solid red;
+}
+
+img{
+    margin-bottom: 10px;
+}
