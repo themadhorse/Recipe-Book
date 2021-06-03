@@ -2,3 +2,6 @@
     white-space: nowrap;
     overflow: hidden;
 }
+p{
+    margin-top: 10px;
+}
