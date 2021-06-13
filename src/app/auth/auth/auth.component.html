@@ -1,7 +1,10 @@
 <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
-        <div class="alert alert-danger" *ngIf="error">
-            <p>{{ error }}</p>
+        <div class="alert alert-danger" *ngIf="error && !isLoading">
+            <p><b>Error: </b>{{ error }}</p>
+        </div>
+        <div class="alert alert-success" *ngIf="isSignedUp">
+            <p>Sign up successful!</p>
         </div>
         <div class="spinner" *ngIf="isLoading">
             <app-loading-spinner></app-loading-spinner>
