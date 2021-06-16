@@ -12,13 +12,16 @@ import { RecipeBookComponent } from './recipe-book/recipe-book.component';
 import { RecipeListComponent } from './recipe-book/recipe-list/recipe-list.component';
 import { RecipeItemComponent } from './recipe-book/recipe-item/recipe-item.component'
 import { RecipeDetailComponent } from './recipe-book/recipe-detail/recipe-detail.component'
-
-import { DropdownDirective } from './shared/dropdown.directive';
 import { SelectRecipeComponent } from './recipe-book/select-recipe/select-recipe.component';
 import { RecipeEditComponent } from './recipe-book/recipe-edit/recipe-edit.component';
 import { AuthComponent } from './auth/auth/auth.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.conponent';
+import { AlertComponent } from './shared/alert/alert.component';
+
+import { DropdownDirective } from './shared/dropdown.directive';
+
 import { AuthInterceptorService } from './auth/auth/auth-interceptor.service';
+import { PlaceholderDirective } from './shared/placeholder.directive';
 
 
 
@@ -34,11 +37,13 @@ import { AuthInterceptorService } from './auth/auth/auth-interceptor.service';
     RecipeListComponent,
     RecipeItemComponent,
     RecipeDetailComponent,
-    DropdownDirective,
     SelectRecipeComponent,
     RecipeEditComponent,
     AuthComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    AlertComponent,
+    DropdownDirective,
+    PlaceholderDirective
   ],
   imports: [
     BrowserModule,
@@ -48,6 +53,7 @@ import { AuthInterceptorService } from './auth/auth/auth-interceptor.service';
     AppRoutingModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  //entryComponents: [AlertComponent] in angular versions below 9 for programmatic creation of component
 })
 export class AppModule { }
