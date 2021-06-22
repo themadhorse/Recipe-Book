@@ -35,13 +35,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   storeRecipes(){
-    // const check = confirm("Are you sure you want to store recipes?");
-    // if(check)
-    // {
-    //   this.dataStorage.storeRecipes();
-    //   alert("Saved!");
-    // }
-
     this.dataStorage.storeRecipes();
     this.showConfirmBox = false;
   }

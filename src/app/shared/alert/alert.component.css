@@ -14,13 +14,14 @@ html{
 
 .alert-box{
     position: fixed;
-    top: 30vh;
-    left: 40vw;
-    padding: 16px;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    padding: calc(1em + 0.25vw); 
     z-index: 100;
     background: white;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.26);
-
+    transform: translate(-50%, -150%);
     display: inline-block;
 }
 
@@ -30,6 +31,5 @@ html{
 
 p{
     text-align: center;
-    font-size: 1.15em;
 }
 

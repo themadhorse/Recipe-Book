@@ -1,7 +1,7 @@
 <div class="backdrop" (click)="setSave(false)"></div>
 <div class="alert-box">
-    <p style="font-weight: bold; margin-bottom: 2px;">Are you sure you want to save?</p>
-    <p style="color: rgba(128, 128, 128, 0.5); font-size: 8; margin-bottom: 10px;">(This cannot be undone)</p>
+    <p style="font-weight: bold; margin-bottom: 2px; font-size: calc(0.8em + 0.4vw)">Are you sure you want to save?</p>
+    <p style="color: rgba(128, 128, 128, 0.5); font-size: calc(0.8em + 0.3vw); margin-bottom: 1vw;">(This cannot be undone)</p>
     <div class="alert-box-action">
         <button class="btn btn-success" style="margin-right: 20px;" (click)="setSave(true);">Yes</button>
         <button class="btn btn-danger" (click)="setSave(false);">No</button>
