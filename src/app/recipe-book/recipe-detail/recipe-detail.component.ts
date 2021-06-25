@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { ShoppingListService } from 'src/app/shopping/shopping-list.service';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
@@ -27,7 +28,8 @@ export class RecipeDetailComponent implements OnInit{
 
     toShoppingList(){
         const ingredientsCopy = JSON.parse(JSON.stringify(this.selectedRecipe.ingredients));
-        this.shoppingListService.addIngredients(ingredientsCopy);
+        //this.shoppingListService.addIngredients(ingredientsCopy);
+        this.recipeService.toShoppingList(ingredientsCopy);
     }
 
     onDelete(){

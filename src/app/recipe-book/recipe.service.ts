@@ -2,6 +2,9 @@ import { Ingredient } from '../shared/ingredient.model';
 import { Subject } from 'rxjs'
 import { Recipe } from './recipe.model';
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import * as fromShoppingList from '../shopping/store/shopping-list.reducer';
+import * as ShoppingListActions from '../shopping/store/shopping-list.actions';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
@@ -14,6 +17,8 @@ export class RecipeService {
     //     new Recipe("Beef Wellington", "Perfectly cooked beef wrapped in bread pastry", "https://static01.nyt.com/images/2019/12/13/dining/mc-beef-wellington/mc-beef-wellington-articleLarge.jpg", [new Ingredient('Beef', 500), new Ingredient('Pastry', 2)])
     // ];
     private recipes: Recipe[] = [];
+
+    constructor(private store: Store<fromShoppingList.Appstate>) {}
 
     getRecipes(): Recipe[] {
         return this.recipes.slice();
@@ -47,5 +52,9 @@ export class RecipeService {
     setFetchedRecipes(fetchedRecipes: Recipe[]) {
         this.recipes = fetchedRecipes;
         this.recipesChanged.next(this.recipes?.slice());
+    }
+
+    toShoppingList(ingredients: Ingredient[]){
+        this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
     }
 }
