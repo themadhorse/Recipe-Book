@@ -22,15 +22,30 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   constructor(public shoppingListService: ShoppingListService, private store: Store<fromShoppingList.Appstate>) { }
 
   ngOnInit(): void {
-    this.subscription = this.shoppingListService.ingredientSelected.subscribe((index: number) => {
-      let ingredient: Ingredient = this.shoppingListService.getIngredient(index);
-      this.ingredientForm.setValue({
-        'ingName': ingredient.name,
-        'amount': ingredient.amount
-      });
-      this.editMode = true;
-      this.editedItemIndex = index;
-    });
+    this.subscription = this.store.select('shoppingList').subscribe(
+      (stateData: fromShoppingList.State) => {
+        if(stateData.editedIngredientIndex > -1)
+        {
+          this.editMode = true;
+          this.editedItemIndex = stateData.editedIngredientIndex;
+          this.ingredientForm.setValue({
+            'ingName': stateData.editedIngredient.name,
+            'amount': stateData.editedIngredient.amount
+          });
+        } else {
+          this.editMode = false;
+        }
+      }
+    );
+    // this.subscription = this.shoppingListService.ingredientSelected.subscribe((index: number) => {
+    //   let ingredient: Ingredient = this.shoppingListService.getIngredient(index);
+      // this.ingredientForm.setValue({
+      //   'ingName': ingredient.name,
+      //   'amount': ingredient.amount
+      // });
+    //   this.editMode = true;
+    //   this.editedItemIndex = index;
+    // });
   }
 
   setData(){
