@@ -23,20 +23,23 @@ const initialState: State = {
 export function shoppingListReducer(state: State = initialState, action: ShoppingListActions.ShoppingListActions){
   switch(action.type){
     case ShoppingListActions.ADD_INGREDIENT: 
-      return {...state, ingredients: [...state.ingredients, action.payload]};
+      let ingredients = checkDuplicateIngredients({...state}, [action.payload]);
+      return {...state, ingredients: ingredients}
     case ShoppingListActions.ADD_INGREDIENTS:
-      return {...state, ingredients: [...state.ingredients, ...action.payload]};
+      let newIngredients: Ingredient[];
+      newIngredients = checkDuplicateIngredients({...state}, action.payload);
+      return {...state, ingredients: newIngredients};
     case ShoppingListActions.UPDATE_INGREDIENT:
-      const ingredient = state.ingredients[action.payload.index];
-      const updatedIngredient: Ingredient = {...ingredient, ...action.payload.ingredient};
+      const ingredient = {...state.editedIngredient};
+      const updatedIngredient: Ingredient = {...ingredient, ...action.payload};
       const updatedIngredients = [...state.ingredients];
-      updatedIngredients[action.payload.index] = updatedIngredient;
-
-      return {...state, ingredients: updatedIngredients};
+      updatedIngredients[state.editedIngredientIndex] = updatedIngredient;
+      
+      return {...state, ingredients: updatedIngredients, editedIngredient: null, editedIngredientIndex: -1};
     case ShoppingListActions.DELETE_INGREDIENT:
       return {...state, ingredients: state.ingredients.filter((ig, index) => {
-        return index !== action.payload;
-      })};
+        return index !== state.editedIngredientIndex;
+      }), editedIngredient: null, editedIngredientIndex: -1};
       case ShoppingListActions.START_EDIT:
         return {...state, editedIngredientIndex: action.payload, editedIngredient: {...state.ingredients[action.payload]}};
       case ShoppingListActions.STOP_EDIT:
@@ -44,4 +47,25 @@ export function shoppingListReducer(state: State = initialState, action: Shoppin
     default: 
       return state;
   }
+}
+
+function checkDuplicateIngredients(stateCopy: State, ingredients: Ingredient[]): Ingredient[]{
+  let updatedIngredients: Ingredient[];
+  let stateIngredients = [...stateCopy.ingredients];
+  ingredients.forEach(ingredient => {
+    const index = stateCopy.ingredients.findIndex(ing => ing.name === ingredient.name);
+    if(index === -1)
+    {
+      updatedIngredients = [...stateIngredients, ingredient];
+    } 
+    else
+    {
+      updatedIngredients = [...stateIngredients];
+      const updatedIngredient: Ingredient = {...updatedIngredients[index], amount: updatedIngredients[index].amount + ingredient.amount}
+      updatedIngredients[index] = updatedIngredient;
+    }
+    stateIngredients = updatedIngredients;
+  })
+  
+  return updatedIngredients;
 }
