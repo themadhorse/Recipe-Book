@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AuthResponseData, AuthService } from '../auth.service';
+import * as fromApp from '../../store/app.reducer';
+import * as AuthActions from '../store/auth.actions';
 
 @Component({
   selector: 'app-auth',
@@ -16,9 +19,15 @@ export class AuthComponent implements OnInit {
   error: string = null;
   @ViewChild("f", { static: false }) authForm: NgForm;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
+    this.store.select("auth").subscribe(
+      authState => {
+        this.isLoading = authState.loading;
+        this.error = authState.authError;
+      }
+    );
   }
 
   onSwitch(){
@@ -38,26 +47,28 @@ export class AuthComponent implements OnInit {
     this.isLoading = true;
     if(this.isLogInMode)
     {
-      authObs = this.authService.login(email, password);
+      //authObs = this.authService.login(email, password);
+      this.store.dispatch(new AuthActions.Login_Start({ email: email, password: password }));
     }
     else
     {
       authObs = this.authService.signup(email, password)
     }
 
-    authObs.subscribe(
-      responseData => {
-        console.log(responseData);
-        this.error = null;
-        this.isLoading = false; 
+    
+    // authObs.subscribe(
+    //   responseData => {
+    //     console.log(responseData);
+    //     this.error = null;
+    //     this.isLoading = false; 
 
-        if(this.isLogInMode)
-          this.router.navigate(['/recipes']);
-        else
-          this.isSignedUp = true;
-      },
-      errorMsg => { this.isSignedUp = false; this.error = errorMsg; this.isLoading = false; }
-    );
+    //     if(this.isLogInMode)
+    //       this.router.navigate(['/recipes']);
+    //     else
+    //       this.isSignedUp = true;
+    //   },
+    //   errorMsg => { this.isSignedUp = false; this.error = errorMsg; this.isLoading = false; }
+    // );
     this.authForm.reset();
   }
 }

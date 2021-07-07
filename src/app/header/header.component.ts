@@ -1,10 +1,13 @@
 import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { AuthService } from '../auth/auth.service';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { DataStorageService } from '../shared/data-storage.service';
 import { PlaceholderDirective } from '../shared/placeholder.directive';
+import { AppState } from '../store/app.reducer';
 
 @Component({
   selector: 'app-header',
@@ -19,10 +22,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild(PlaceholderDirective, { static: false }) confirmationHost: PlaceholderDirective;
   saveSub: Subscription;
 
-  constructor(public dataStorage: DataStorageService, public authService: AuthService, private componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor(public dataStorage: DataStorageService, public authService: AuthService, private componentFactoryResolver: ComponentFactoryResolver, private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.userSub = this.authService.user.subscribe(
+    this.userSub = this.store.select('auth')
+    .pipe(map(authState => authState.user))
+    .subscribe(
       user => {
         this.isAuthenticated = !!user;
       }
