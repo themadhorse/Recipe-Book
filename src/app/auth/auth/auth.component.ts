@@ -1,39 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { AuthResponseData, AuthService } from '../auth.service';
 import * as fromApp from '../../store/app.reducer';
 import * as AuthActions from '../store/auth.actions';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   isLogInMode = true;
   isLoading = false;
   isSignedUp = false;
   error: string = null;
   @ViewChild("f", { static: false }) authForm: NgForm;
 
-  constructor(private authService: AuthService, private router: Router, private store: Store<fromApp.AppState>) { }
+  private subscription: Subscription;
+
+  constructor(private store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
-    this.store.select("auth").subscribe(
+    this.subscription = this.store.select("auth").subscribe(
       authState => {
         this.isLoading = authState.loading;
         this.error = authState.authError;
+        this.isSignedUp = authState.hasSignedUp;
       }
     );
   }
 
   onSwitch(){
     this.isLogInMode = !this.isLogInMode;
-    this.isSignedUp = false;
-    this.error = null;
+    this.store.dispatch(new AuthActions.Clear_Messages());
   }
 
   onSubmit(){
@@ -42,7 +42,7 @@ export class AuthComponent implements OnInit {
     const email: string = this.authForm.value.email;
     const password: string = this.authForm.value.password;
 
-    let authObs: Observable<AuthResponseData>;
+    //let authObs: Observable<AuthResponseData>;
     
     this.isLoading = true;
     if(this.isLogInMode)
@@ -52,7 +52,8 @@ export class AuthComponent implements OnInit {
     }
     else
     {
-      authObs = this.authService.signup(email, password)
+      this.store.dispatch(new AuthActions.Signup_Start({ email: email, password: password }));
+
     }
 
     
@@ -70,5 +71,10 @@ export class AuthComponent implements OnInit {
     //   errorMsg => { this.isSignedUp = false; this.error = errorMsg; this.isLoading = false; }
     // );
     this.authForm.reset();
+  }
+
+  ngOnDestroy(){
+    if(this.subscription)
+      this.subscription.unsubscribe();
   }
 }
