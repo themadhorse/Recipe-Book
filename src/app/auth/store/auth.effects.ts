@@ -24,7 +24,7 @@ const handleAuthentication = ({ expiresIn, email, localId, idToken }: AuthRespon
   const expirationDate = new Date(new Date().getTime() + (+expiresIn * 1000));
   const user = new User(email, localId, idToken, expirationDate);
   localStorage.setItem('userData', JSON.stringify(user));
-  return new AuthActions.Authenticate_Success({ email: email, id: localId, _token: idToken, _tokenExpirationDate: expirationDate });
+  return new AuthActions.Authenticate_Success({ email: email, id: localId, _token: idToken, _tokenExpirationDate: expirationDate, redirect: true });
 }
 
 const handleError = (errorRes): Observable<AuthActions.Authenticate_Fail> => {
@@ -84,8 +84,9 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   authRedirect = this.actions$.pipe(ofType(AuthActions.AUTHENTICATE_SUCCESS),
-    tap(() => {
-      this.router.navigate(['/']);
+    tap((AuthSuccessAction: AuthActions.Authenticate_Success) => {
+      if(AuthSuccessAction.payload.redirect)
+        this.router.navigate(['/']);
     })
   );
 
@@ -117,7 +118,7 @@ export class AuthEffects {
         //this.user.next(loadedUser);
         const timeLeft = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
         this.authService.setLogoutTimer(timeLeft);
-        return new AuthActions.Authenticate_Success({email: loadedUser.email, id: loadedUser.id, _token: loadedUser.token, _tokenExpirationDate: expirationDate });
+        return new AuthActions.Authenticate_Success({email: loadedUser.email, id: loadedUser.id, _token: loadedUser.token, _tokenExpirationDate: expirationDate, redirect: false });
         // this.autologout(timeLeft);
       }
   }
