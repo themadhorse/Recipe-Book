@@ -6,17 +6,16 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 
 import { AuthInterceptorService } from './auth/auth/auth-interceptor.service';
+import { SharedModule } from './shared/shared.module';
 
 import * as fromApp from './store/app.reducer';
 import { AuthEffects } from './auth/store/auth.effects';
 import { environment } from 'src/environments/environment';
-import { RecipeEffects } from './recipe-book/store/recipes.effects';
 
 
 
@@ -32,9 +31,9 @@ import { RecipeEffects } from './recipe-book/store/recipes.effects';
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects, RecipeEffects]),
+    EffectsModule.forRoot([AuthEffects]),
     StoreDevtoolsModule.instrument({logOnly: environment.production}),
-    StoreRouterConnectingModule.forRoot(),
+    StoreRouterConnectingModule,
     SharedModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
