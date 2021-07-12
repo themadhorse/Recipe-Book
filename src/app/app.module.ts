@@ -33,7 +33,7 @@ import { environment } from 'src/environments/environment';
     StoreModule.forRoot(fromApp.appReducer),
     EffectsModule.forRoot([AuthEffects]),
     StoreDevtoolsModule.instrument({logOnly: environment.production}),
-    StoreRouterConnectingModule,
+    StoreRouterConnectingModule.forRoot(),
     SharedModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
