@@ -3,11 +3,13 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { AuthService } from '../auth/auth.service';
 import { AlertComponent } from '../shared/alert/alert.component';
+import { DataStorageService } from '../shared/data-storage.service';
 import { PlaceholderDirective } from '../shared/placeholder.directive';
 import { AppState } from '../store/app.reducer';
 import * as AuthActions from '../auth/store/auth.actions';
-import * as RecipeActions from '../recipe-book/store/recipes.actions';
+import * as RecipeActions from '../recipe-book/store/recipe.actions';
 
 @Component({
   selector: 'app-header',
@@ -22,7 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild(PlaceholderDirective, { static: false }) confirmationHost: PlaceholderDirective;
   saveSub: Subscription;
 
-  constructor(/*public dataStorage: DataStorageService, public authService: AuthService,*/ private componentFactoryResolver: ComponentFactoryResolver, private store: Store<AppState>) { }
+  constructor(public dataStorage: DataStorageService, public authService: AuthService, private componentFactoryResolver: ComponentFactoryResolver, private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.userSub = this.store.select('auth')

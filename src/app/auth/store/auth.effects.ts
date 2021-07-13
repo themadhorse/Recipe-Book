@@ -84,8 +84,8 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   authRedirect = this.actions$.pipe(ofType(AuthActions.AUTHENTICATE_SUCCESS),
-    tap((AuthSuccessAction: AuthActions.Authenticate_Success) => {
-      if(AuthSuccessAction.payload.redirect)
+    tap((authSuccessAction: AuthActions.Authenticate_Success) => {
+      if(authSuccessAction.payload.redirect)
         this.router.navigate(['/']);
     })
   );
@@ -118,7 +118,7 @@ export class AuthEffects {
         //this.user.next(loadedUser);
         const timeLeft = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
         this.authService.setLogoutTimer(timeLeft);
-        return new AuthActions.Authenticate_Success({email: loadedUser.email, id: loadedUser.id, _token: loadedUser.token, _tokenExpirationDate: expirationDate, redirect: false });
+        return new AuthActions.Authenticate_Success({email: loadedUser.email, id: loadedUser.id, _token: loadedUser.token, _tokenExpirationDate: expirationDate, redirect: false});
         // this.autologout(timeLeft);
       }
   }

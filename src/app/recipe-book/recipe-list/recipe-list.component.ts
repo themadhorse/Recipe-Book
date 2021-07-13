@@ -1,11 +1,14 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
+import * as fromApp from '../../store/app.reducer';
+import * as RecipeActions from '../store/recipe.actions';
 
 import { Recipe } from '../recipe.model';
 
-import * as fromApp from '../../store/app.reducer';
-import * as fromRecipes from '../store/recipes.reducer';
+import { RecipeService } from '../recipe.service';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-list',
@@ -17,7 +20,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   isTrue = false;
   subscription: Subscription;
 
-  constructor(/*public recipeService: RecipeService,*/ private store: Store<fromApp.AppState>) { }
+  constructor(public recipeService: RecipeService, private store: Store<fromApp.AppState>) { }
 
 
   ngOnInit(): void {
@@ -27,11 +30,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   //       this.recipes = updatedRecipes;
   //   }
   // );
-  this.subscription = this.store.select('recipes').subscribe(
-    (recipeState: fromRecipes.State) => {
-      this.recipes = recipeState.recipes;
-    }
-  );
+  this.subscription = this.store.select('recipes')
+  .pipe(map(recipeState => recipeState.recipes))
+  .subscribe((recipes: Recipe[]) => { this.recipes = recipes })
   }
 
   ngOnDestroy(){
