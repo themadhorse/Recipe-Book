@@ -1,6 +1,5 @@
 <a class="list-group-item clearfix"
-    [@addRecipe]
-    [routerLink]="[index]"
+    [routerLink]="[recipeService.getIndex(recipe)]"
     style="cursor: pointer">
     <div class="row">
         <div class="col-xs-9" id="recipe">
