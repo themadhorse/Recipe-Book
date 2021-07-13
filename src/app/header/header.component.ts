@@ -9,6 +9,7 @@ import { DataStorageService } from '../shared/data-storage.service';
 import { PlaceholderDirective } from '../shared/placeholder.directive';
 import { AppState } from '../store/app.reducer';
 import * as AuthActions from '../auth/store/auth.actions';
+import * as RecipeActions from '../recipe-book/store/recipe.actions';
 
 @Component({
   selector: 'app-header',
@@ -41,7 +42,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   storeRecipes(){
-    this.dataStorage.storeRecipes();
+    //this.dataStorage.storeRecipes();
+    this.store.dispatch(new RecipeActions.StoreRecipes());
     this.showConfirmBox = false;
   }
 
@@ -64,7 +66,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   fetchRecipes(){
-    this.dataStorage.fetchRecipes().subscribe();
+    //this.dataStorage.fetchRecipes().subscribe();
+    this.store.dispatch(new RecipeActions.FetchRecipes());
   }
 
   logout(){
