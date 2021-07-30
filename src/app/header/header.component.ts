@@ -10,6 +10,8 @@ import { PlaceholderDirective } from '../shared/placeholder.directive';
 import { AppState } from '../store/app.reducer';
 import * as AuthActions from '../auth/store/auth.actions';
 import * as RecipeActions from '../recipe-book/store/recipe.actions';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-header',
@@ -79,5 +81,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userSub.unsubscribe();
     if(this.saveSub)
       this.saveSub.unsubscribe();
+  }
+
+  exportAsPDF() {
+    this.store.dispatch(new RecipeActions.ExportRecipes());
+  }
+
+    htmlToPdf() {
+    html2canvas(document.querySelector("#test")).then((canvas) => {
+      let pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
+
+      let imgData = canvas.toDataURL('image/jpeg', 1.0);
+      pdf.addImage(imgData,0,0,canvas.width, canvas.height);
+      pdf.addPage();
+      pdf.addImage(imgData,0,0,canvas.width, canvas.height);
+
+      pdf.save('Ooo');
+    })
   }
 }
