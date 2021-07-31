@@ -13,7 +13,7 @@
 
         <div class="navbar-collapse" [class.collapse]="collapsed" (window:resize)="collapsed=true">
             <ul class="nav navbar-nav">
-                <li routerLinkActive="active" *ngIf="isAuthenticated"><a routerLink="/recipes" 
+                <li routerLinkActive="active" *ngIf="isAuthenticated"><a routerLink="/recipes"
                     (click)="collapsed=true">Recipes</a></li>
                 <li routerLinkActive="active"
                     (click)="collapsed=true"
@@ -25,6 +25,7 @@
                     <ul class="dropdown-menu">
                         <li><a style="cursor: pointer" (click)="fetchRecipes(); collapsed=true;">Fetch Data</a></li>
                         <li><a style="cursor: pointer" (click)="showConfirmation(); collapsed=true;">Save Data</a></li>
+                        <li><a style="cursor: pointer" (click)="showPDFPreview = true; collapsed=true;">Export as PDF</a></li>
                     </ul>
                 </li>
                 <li *ngIf="isAuthenticated" (click)="logout()">
@@ -39,3 +40,5 @@
         </div>
     </div>
 </nav>
+
+<app-pdf *ngIf="showPDFPreview" (showPDFPreview)="showPDFPreview = $event"></app-pdf>

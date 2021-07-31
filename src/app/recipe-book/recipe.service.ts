@@ -5,10 +5,13 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer';
 import * as ShoppingListActions from '../shopping/store/shopping-list.actions';
+import jsPDF from 'jspdf';
+//import * as jsPDF from 'jspdf';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
     private recipeSelectedId = 0;
+    private pdf = new jsPDF();
 
     recipesChanged = new Subject<Recipe[]>();
 
@@ -56,5 +59,13 @@ export class RecipeService {
 
     toShoppingList(ingredients: Ingredient[]){
         this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
+    }
+
+    downloadAsPDF() {
+
+    }
+
+    addToPDF() {
+
     }
 }

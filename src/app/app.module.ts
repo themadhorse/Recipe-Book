@@ -18,6 +18,7 @@ import * as fromApp from './store/app.reducer';
 import { AuthEffects } from './auth/store/auth.effects';
 import { environment } from 'src/environments/environment';
 import { RecipeEffects } from './recipe-book/store/recipe.effects';
+import { PdfComponent } from './header/pdf/pdf.component';
 
 
 
@@ -27,6 +28,7 @@ import { RecipeEffects } from './recipe-book/store/recipe.effects';
   declarations: [
     AppComponent,
     HeaderComponent,
+    PdfComponent,
   ],
   imports: [
     BrowserModule,

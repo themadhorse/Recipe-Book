@@ -1,0 +1,24 @@
+<div id="pdf">
+  <div class="backdrop" (click)="closePDF()"></div>
+  <div class="container">
+    <div class="row"><button class="btn btn-success" id="export" (click)="htmlToPdf()">Export</button></div>
+    <div class="scroller">
+      <div id="pdf-wrapper" #pdfWrapper>
+          <h2 class="text-center">Recipes</h2>
+          <div class="col-xs-12 col-md-12 col-lg-12" *ngFor="let recipe of selectedRecipes; let i = index;">
+            <hr>
+            <h4><b>{{ i+1 }}.) {{ recipe.name }}</b></h4>
+            <p class=""><img [src]="recipe.imgPath" style="width: auto; max-height: 300px;"></p>
+            <h5><b>Description:</b></h5>
+            <p>{{ recipe.description }}</p>
+            <h5><b>Ingredients:</b></h5>
+            <ul class="list-group">
+              <li *ngFor="let ingredient of recipe.ingredients; let i = index;" class="list-group-item">
+                {{ ingredient.name }} - {{ ingredient.amount }}
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
