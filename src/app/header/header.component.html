@@ -25,7 +25,7 @@
                     <ul class="dropdown-menu">
                         <li><a style="cursor: pointer" (click)="fetchRecipes(); collapsed=true;">Fetch Data</a></li>
                         <li><a style="cursor: pointer" (click)="showConfirmation(); collapsed=true;">Save Data</a></li>
-                        <li><a style="cursor: pointer" (click)="htmlToPdf(); collapsed=true;">Export as PDF</a></li>
+                        <li><a style="cursor: pointer" (click)="showPDFPreview = true; collapsed=true;">Export as PDF</a></li>
                     </ul>
                 </li>
                 <li *ngIf="isAuthenticated" (click)="logout()">
@@ -41,4 +41,4 @@
     </div>
 </nav>
 
-<app-pdf></app-pdf>
+<app-pdf *ngIf="showPDFPreview" (showPDFPreview)="showPDFPreview = $event"></app-pdf>

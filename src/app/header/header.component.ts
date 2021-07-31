@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userSub: Subscription;
   isAuthenticated = false;
   showConfirmBox = false;
+  showPDFPreview = false;
   @ViewChild(PlaceholderDirective, { static: false }) confirmationHost: PlaceholderDirective;
   saveSub: Subscription;
 
@@ -88,7 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
     htmlToPdf() {
-    html2canvas(document.querySelector("#test")).then((canvas) => {
+    html2canvas(document.querySelector("#pdf")).then((canvas) => {
       let pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
 
       let imgData = canvas.toDataURL('image/jpeg', 1.0);
