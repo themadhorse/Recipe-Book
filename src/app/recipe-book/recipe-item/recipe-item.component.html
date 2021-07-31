@@ -4,7 +4,10 @@
     style="cursor: pointer">
     <div class="row">
         <div class="col-xs-9" id="recipe">
-            <h4 class="list-group-item-heading"><b>{{ recipe.name }}</b></h4>
+            <h4 class="list-group-item-heading">
+              <b>{{ recipe.name }}</b>
+              <i class="bi bi-diamond-fill" *ngIf="recipe.isGlobal"></i>
+            </h4>
             <p class="list-group-item-text">{{ recipe.description }}</p>
         </div>
         <span class="col-xs-3">

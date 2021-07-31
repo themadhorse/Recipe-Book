@@ -5,3 +5,9 @@
 p{
     margin-top: 10px;
 }
+
+.bi-diamond-fill {
+  margin-left: 2%;
+  font-size: small;
+  color: turquoise;
+}

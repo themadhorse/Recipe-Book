@@ -14,7 +14,7 @@
                     </div>
                     <div class="form-group">
                         <label for="imgPath">Image Path</label>
-                            <input id="imgPath" type="text" 
+                            <input id="imgPath" type="text"
                             formControlName="imgPath"
                             class="form-control" #path>
                     </div>
@@ -26,9 +26,26 @@
                 </div>
             </div>
             <div class="row">
+              <div class="col-xs-12">
+                <div class="form-group">
+                  <div class="custom-control custom-switch">
+                    <div class="row">
+                      <div class="col-xs-5">
+                        <label for="globalSwitch">Should this recipe be made global </label>
+                        <p class="text-muted form-text">This action is irreversible</p>
+                      </div>
+                      <div class="col-xs-7">
+                        <input type="checkbox" id="globalSwitch" formControlName="isGlobal" style="margin-left: -12%;" [attr.disabled]="editMode?'':null">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
                 <div class="col-xs-12" formArrayName="ingredients">
                     <label for="">Ingredients</label>
-                    <div class="row" *ngFor="let ingredientCtrl of controls; let i = index" 
+                    <div class="row" *ngFor="let ingredientCtrl of controls; let i = index"
                      [formGroupName]="i" style="margin-top: 2px;">
                         <div class="col-xs-8">
                             <input type="text" class="form-control" formControlName="name">

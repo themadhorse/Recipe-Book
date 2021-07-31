@@ -1,7 +1,7 @@
 <div id="pdf">
   <div class="backdrop" (click)="closePDF()"></div>
   <div class="container">
-    <div class="row"><button class="btn btn-success" id="export" (click)="htmlToPdf()">Export</button></div>
+    <div class="row"><button class="btn btn-success" id="export" (click)="htmlToPdf(); closePDF();">Export</button></div>
     <div class="scroller">
       <div id="pdf-wrapper" #pdfWrapper>
           <h2 class="text-center">Recipes</h2>

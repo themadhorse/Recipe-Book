@@ -40,11 +40,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     let recipeName = "";
     let recipeImgPath = "";
     let recipeDescription = "";
+    let isRecipeGlobal = false;
     let recipeIngredients = new FormArray([]);
 
     if (this.editMode) {
           const recipe = selectedRecipe;
           recipeName = recipe.name;
+          isRecipeGlobal = recipe.isGlobal;
           recipeImgPath = recipe.imgPath;
           if (recipe['ingredients']) {
             for (let ingredient of recipe['ingredients']) {
@@ -63,6 +65,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       'name': new FormControl(recipeName, Validators.required),
       'description': new FormControl(recipeDescription, Validators.required),
       'imgPath': new FormControl(recipeImgPath, Validators.required),
+      'isGlobal': new FormControl(isRecipeGlobal, Validators.required),
       'ingredients': recipeIngredients
     });
   }
@@ -76,7 +79,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     }
     else
     {
-      this.store.dispatch(new RecipeActions.AddRecipe(new Recipe(this.recipeForm.get('name').value, this.recipeForm.get('description').value, this.recipeForm.get('imgPath').value, this.recipeForm.get('ingredients').value)));
+      this.store.dispatch(new RecipeActions.AddRecipe(new Recipe(this.recipeForm.get('name').value, this.recipeForm.get('description').value, this.recipeForm.get('imgPath').value, this.recipeForm.get('ingredients').value, this.recipeForm.get('isGlobal').value)));
     }
     this.onCancel();
   }
