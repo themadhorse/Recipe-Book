@@ -20,6 +20,7 @@ import jsPDF from 'jspdf';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   collapsed = true;
+  exportChoice: number;
   private userSub: Subscription;
   isAuthenticated = false;
   showConfirmBox = false;
@@ -85,20 +86,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.saveSub.unsubscribe();
   }
 
-  exportAsPDF() {
-    this.store.dispatch(new RecipeActions.ExportRecipes());
+  showPDF(exportChoice: number) {
+    this.showPDFPreview = true;
+    this.exportChoice = exportChoice;
   }
 
-    htmlToPdf() {
-    html2canvas(document.querySelector("#pdf")).then((canvas) => {
-      let pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
-
-      let imgData = canvas.toDataURL('image/jpeg', 1.0);
-      pdf.addImage(imgData,0,0,canvas.width, canvas.height);
-      pdf.addPage();
-      pdf.addImage(imgData,0,0,canvas.width, canvas.height);
-
-      pdf.save('Ooo');
-    })
-  }
 }

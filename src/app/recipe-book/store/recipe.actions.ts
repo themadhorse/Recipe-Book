@@ -60,10 +60,6 @@ export class StoreRecipes implements Action {
   readonly type = STORE_RECIPES;
 }
 
-export class ExportRecipes implements Action {
-  readonly type = EXPORT_RECIPES;
-}
-
 export class SetGlobalRecipes implements Action {
   readonly type = SET_GLOBAL_RECIPES;
 
@@ -97,5 +93,4 @@ export type RecipesActions =
   | DeleteRecipe
   | DeleteGlobalRecipe
   | StoreRecipes
-  | ExportRecipes
   | ResetRecipes;
