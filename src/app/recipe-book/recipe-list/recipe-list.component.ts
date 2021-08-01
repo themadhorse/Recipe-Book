@@ -31,7 +31,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   //   }
   // );
   this.subscription = this.store.select('recipes')
-  .pipe(map(recipeState => recipeState.recipes))
+  .pipe(map(recipeState => [...recipeState.globalRecipes, ...recipeState.recipes]))
   .subscribe((recipes: Recipe[]) => { this.recipes = recipes })
   }
 

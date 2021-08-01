@@ -4,9 +4,9 @@
     </div>
 </div>
 <hr>
-<div class="row">
+<div class="row" style="overflow-y: auto;">
     <div class="col-xs-12">
-        <app-recipe-item 
+        <app-recipe-item
         routerLinkActive="active"
         *ngFor="let recipe of recipes; let i = index" [currentRecipe] = "recipe" [index]="i"></app-recipe-item>
     </div>

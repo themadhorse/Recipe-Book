@@ -1,7 +1,6 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
-import * as RecipeActions from '../../recipe-book/store/recipe.actions';
 import * as fromRecipe from '../../recipe-book/store/recipe.reducer';
 import { Recipe } from 'src/app/recipe-book/recipe.model';
 import { Subscription } from 'rxjs';
@@ -18,6 +17,7 @@ export class PdfComponent implements OnInit, OnDestroy {
   selectedRecipes: Recipe[];
   testRecipe: Recipe = null;
   storeSub: Subscription;
+  @Input() exportChoice: number
   @Output('showPDFPreview') showPDFPreview = new EventEmitter<boolean>();
   @ViewChild('pdfWrapper', {static: true}) pdfWrapper: ElementRef;
 
@@ -26,7 +26,14 @@ export class PdfComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.storeSub = this.store.select('recipes').subscribe(
       (recipeState: fromRecipe.State) => {
-        this.selectedRecipes = [...recipeState.recipes];
+        switch(this.exportChoice)
+        {
+          case 0: this.selectedRecipes = [...recipeState.globalRecipes, ...recipeState.recipes];
+          break;
+          case 1: this.selectedRecipes = [...recipeState.globalRecipes];
+          break;
+          case 2: this.selectedRecipes = [...recipeState.recipes];
+        }
         this.testRecipe = this.selectedRecipes[1];
       }
     );
@@ -53,20 +60,6 @@ export class PdfComponent implements OnInit, OnDestroy {
       pdf.save('Recipe');
     })
   }
-
-  // htmlToPdf() {
-  //   domtoimage.toPNG(this.pdfWrapper.nativeElement, {
-  //     allowTaint: true
-  //   }).then(
-  //     dataURL => {
-  //       const doc = new jsPDF('p', 'pt', 'letter');
-  //       let width = doc.internal.pageSize.getWidth();
-  //       let height = doc.internal.pageSize.getHeight();
-  //       doc.addImage(dataURL, 'PNG', 0, 0, width, height);
-  //       doc.save('Recipe');
-  //     }
-  //   );
-  // }
 
   ngOnDestroy() {
     this.storeSub.unsubscribe();

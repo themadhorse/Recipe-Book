@@ -21,11 +21,18 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown" *ngIf="isAuthenticated" appDropdown>
+                    <a role="button" class="dropdown-toggle">Export <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <li><a style="cursor: pointer" (click)="showPDF(0); collapsed=true">Export All</a></li>
+                      <li><a style="cursor: pointer" (click)="showPDF(1); collapsed=true">Export Global</a></li>
+                      <li><a style="cursor: pointer" (click)="showPDF(2); collapsed=true">Export Private</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown" *ngIf="isAuthenticated" appDropdown>
                     <a class="dropdown-toggle" role="button">Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a style="cursor: pointer" (click)="fetchRecipes(); collapsed=true;">Fetch Data</a></li>
                         <li><a style="cursor: pointer" (click)="showConfirmation(); collapsed=true;">Save Data</a></li>
-                        <li><a style="cursor: pointer" (click)="showPDFPreview = true; collapsed=true;">Export as PDF</a></li>
                     </ul>
                 </li>
                 <li *ngIf="isAuthenticated" (click)="logout()">
@@ -41,4 +48,4 @@
     </div>
 </nav>
 
-<app-pdf *ngIf="showPDFPreview" (showPDFPreview)="showPDFPreview = $event"></app-pdf>
+<app-pdf *ngIf="showPDFPreview" (showPDFPreview)="showPDFPreview = $event" [exportChoice]="exportChoice"></app-pdf>

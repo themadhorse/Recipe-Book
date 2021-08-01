@@ -9,6 +9,7 @@ import * as RecipesActions from './recipe.actions';
 import { Recipe } from '../recipe.model';
 import * as fromApp from '../../store/app.reducer';
 import * as fromRecipe from '../store/recipe.reducer';
+import * as fromAuth from '../../auth/store/auth.reducer';
 
 
 @Injectable()
@@ -16,33 +17,62 @@ export class RecipeEffects {
   @Effect()
   fetchRecipes = this.actions$.pipe(
     ofType(RecipesActions.FETCH_RECIPES),
-    switchMap(() => {
+    withLatestFrom(this.store.select('auth')),
+    switchMap(([actionData, authState]) => {
+      const user: string[] = authState.user.email.split('.');
       return this.http.get<Recipe[]>(
-        'https://recipe-book-ddfc0-default-rtdb.firebaseio.com/recipes.json'
+        `https://recipe-book-ddfc0-default-rtdb.firebaseio.com/${user[0]}.json`
       );
     }),
     map(recipes => {
+      if(recipes)
+      {
       return recipes.map(recipe => {
         return {
           ...recipe,
           ingredients: recipe.ingredients ? recipe.ingredients : []
         };
       });
+    }
+    else
+      return [];
     }),
     map(recipes => {
       return new RecipesActions.SetRecipes(recipes);
     })
   );
 
+  @Effect()
+  fetchGlobalRecipes = this.actions$.pipe(
+    ofType(RecipesActions.FETCH_GLOBAL_RECIPES),
+    switchMap(() => {
+      return this.http.get<Recipe[]>(`https://recipe-book-ddfc0-default-rtdb.firebaseio.com/recipes.json`);
+    }),
+    map((globalRecipes: Recipe[]) => {
+      return globalRecipes.map(globalRecipe => {
+        return {...globalRecipe, ingredients: globalRecipe.ingredients ? globalRecipe.ingredients : []};
+      });
+    }),
+    map((globalRecipes: Recipe[]) => {
+      return new RecipesActions.SetGlobalRecipes(globalRecipes);
+    })
+  );
+
   @Effect({dispatch: false})
   storeRecipes = this.actions$.pipe(
     ofType(RecipesActions.STORE_RECIPES),
-    withLatestFrom(this.store.select('recipes')),
-    switchMap(([actionData, recipesState]) => {
+    withLatestFrom(this.store.select('recipes'), this.store.select('auth')),
+    switchMap(([actionData, recipesState, authState]) => {
+      const user: string[] = authState.user.email.split('.');
       return this.http.put(
-        'https://recipe-book-ddfc0-default-rtdb.firebaseio.com/recipes.json',
+        `https://recipe-book-ddfc0-default-rtdb.firebaseio.com/${user[0]}.json`,
         recipesState.recipes
       );
+    }),
+    withLatestFrom(this.store.select('recipes')),
+    switchMap(([actionData, recipesState]) => {
+      return this.http.put(`https://recipe-book-ddfc0-default-rtdb.firebaseio.com/recipes.json`,
+      recipesState.globalRecipes);
     })
   );
 
@@ -90,30 +120,6 @@ export class RecipeEffects {
       }
     );
   }
-
-  // arrangePdf(recipes: Recipe[]) {
-  //   return new Promise<jsPDF>((resolve, reject) => {
-  //   let doc = new jsPDF('p', 'pt', 'a4');
-  //     let width = doc.internal.pageSize.width;
-  //     let height = doc.internal.pageSize.height;
-  //     let options = {
-  //       pagesplit: true
-  //     };
-  //     doc.text('Recipes', 20, 30);
-  //     recipes.forEach(
-  //       (recipe: Recipe, index: number) => {
-  //         doc.text(`${index+1}`, 20, index*100+50);
-  //         this.getDataUri(recipe.imgPath).then((imgData: string) => {
-  //           doc.addImage(imgData, 'PNG', 20, index*100+80, 100, 100);
-  //           doc.text(recipe.name, 20, index*100+220);
-  //           doc.text(recipe.description, 20, index*100+240);
-  //           resolve(doc);
-  //         });
-  //       }
-  //       );
-  //     }
-  //   );
-  // }
 
   getDataUri(url: string) {
     return new Promise(

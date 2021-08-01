@@ -8,6 +8,9 @@ import { Observable, of } from "rxjs";
 import { Router } from "@angular/router";
 import { User } from "../user.model";
 import { AuthService } from "../auth.service";
+import { Store } from "@ngrx/store";
+import * as fromApp from '../../store/app.reducer';
+import * as RecipeActions from '../../recipe-book/store/recipe.actions';
 
 export interface AuthResponseData {
   kind: string;
@@ -24,6 +27,7 @@ const handleAuthentication = ({ expiresIn, email, localId, idToken }: AuthRespon
   const expirationDate = new Date(new Date().getTime() + (+expiresIn * 1000));
   const user = new User(email, localId, idToken, expirationDate);
   localStorage.setItem('userData', JSON.stringify(user));
+
   return new AuthActions.Authenticate_Success({ email: email, id: localId, _token: idToken, _tokenExpirationDate: expirationDate, redirect: true });
 }
 
@@ -76,7 +80,9 @@ export class AuthEffects {
         tap((resData) => {
           this.authService.setLogoutTimer(+resData.expiresIn*1000);
         }),
-        map((resData: AuthResponseData) => handleAuthentication(resData)),
+        map((resData: AuthResponseData) => {
+          this.store.dispatch(new RecipeActions.ResetRecipes());
+          return handleAuthentication(resData)}),
         catchError(errorRes => handleError(errorRes))
       )
     })
@@ -108,14 +114,15 @@ export class AuthEffects {
         _token: string,
         _tokenExpirationDate: string
     } = JSON.parse(localStorage.getItem('userData'));
-    
+
     if(userData)
     {
       const expirationDate = new Date(userData._tokenExpirationDate);
       const loadedUser = new User(userData.email, userData.id, userData._token, expirationDate);
-        
+
       if(loadedUser.token){
         //this.user.next(loadedUser);
+        this.store.dispatch(new RecipeActions.ResetRecipes());
         const timeLeft = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
         this.authService.setLogoutTimer(timeLeft);
         return new AuthActions.Authenticate_Success({email: loadedUser.email, id: loadedUser.id, _token: loadedUser.token, _tokenExpirationDate: expirationDate, redirect: false});
@@ -128,7 +135,7 @@ export class AuthEffects {
 
 
 
-  constructor(private actions$: Actions, private http: HttpClient, private router: Router, private authService: AuthService) { }
+  constructor(private actions$: Actions, private http: HttpClient, private router: Router, private authService: AuthService, private store: Store<fromApp.AppState>) { }
 
 
 
