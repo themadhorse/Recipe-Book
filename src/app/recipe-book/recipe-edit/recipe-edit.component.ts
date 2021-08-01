@@ -30,7 +30,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         }
       ),
       switchMap(() => this.store.select('recipes')),
-      map(recipeState => recipeState.recipes[this.id])
+      map(recipeState => [...recipeState.globalRecipes, ...recipeState.recipes]),
+      map((recipes: Recipe[]) => recipes[this.id])
       ).subscribe((recipe: Recipe) => {
         this.initForm(recipe);
       })
@@ -75,11 +76,21 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     //this.recipeService.addRecipe(new Recipe(this.recipeForm.get('name').value, this.recipeForm.get('description').value, this.recipeForm.get('imgPath').value, this.recipeForm.get('ingredients').value), this.id, this.editMode);
     if(this.editMode)
     {
-      this.store.dispatch(new RecipeActions.UpdateRecipe({index: this.id, newRecipe: new Recipe(this.recipeForm.get('name').value, this.recipeForm.get('description').value, this.recipeForm.get('imgPath').value, this.recipeForm.get('ingredients').value)}))
+      const recipeToBeUpdated = new Recipe(this.recipeForm.get('name').value, this.recipeForm.get('description').value, this.recipeForm.get('imgPath').value, this.recipeForm.get('ingredients').value, this.recipeForm.get('isGlobal').value);
+
+      if(this.recipeForm.get('isGlobal').value)
+        this.store.dispatch(new RecipeActions.UpdateGlobalRecipe({index: this.id, newRecipe: recipeToBeUpdated}))
+      else
+      this.store.dispatch(new RecipeActions.UpdateRecipe({index: this.id, newRecipe: recipeToBeUpdated}))
     }
     else
     {
-      this.store.dispatch(new RecipeActions.AddRecipe(new Recipe(this.recipeForm.get('name').value, this.recipeForm.get('description').value, this.recipeForm.get('imgPath').value, this.recipeForm.get('ingredients').value, this.recipeForm.get('isGlobal').value)));
+      const recipeToBeAdded = new Recipe(this.recipeForm.get('name').value, this.recipeForm.get('description').value, this.recipeForm.get('imgPath').value, this.recipeForm.get('ingredients').value, this.recipeForm.get('isGlobal').value);
+
+      if(this.recipeForm.get('isGlobal').value)
+        this.store.dispatch(new RecipeActions.AddGlobalRecipe(recipeToBeAdded));
+      else
+        this.store.dispatch(new RecipeActions.AddRecipe(recipeToBeAdded));
     }
     this.onCancel();
   }

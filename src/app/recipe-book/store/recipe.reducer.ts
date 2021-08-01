@@ -3,10 +3,12 @@ import * as RecipesActions from './recipe.actions';
 
 export interface State {
   recipes: Recipe[];
+  globalRecipes: Recipe[];
 }
 
 const initialState: State = {
-  recipes: []
+  recipes: [],
+  globalRecipes: []
 };
 
 export function recipeReducer(
@@ -19,11 +21,27 @@ export function recipeReducer(
         ...state,
         recipes: [...action.payload]
       };
+      case RecipesActions.SET_GLOBAL_RECIPES:
+        return {
+          ...state,
+          globalRecipes: [...action.payload]
+        }
     case RecipesActions.ADD_RECIPE:
       return {
         ...state,
         recipes: [...state.recipes, action.payload]
       };
+    case RecipesActions.ADD_GLOBAL_RECIPE:
+      return {
+        ...state,
+        globalRecipes: [...state.globalRecipes, action.payload]
+      };
+    case RecipesActions.RESET_RECIPES:
+      return {
+        ...state,
+        recipes: [],
+        globalRecipes: []
+      }
     case RecipesActions.UPDATE_RECIPE:
       const updatedRecipe = {
         ...state.recipes[action.payload.index],
@@ -37,10 +55,30 @@ export function recipeReducer(
         ...state,
         recipes: updatedRecipes
       };
+    case RecipesActions.UPDATE_GLOBAL_RECIPE:
+      const updatedGlobalRecipe = {
+        ...state.globalRecipes[action.payload.index],
+        ...action.payload.newRecipe
+      };
+
+      const updatedGlobalRecipes = [...state.globalRecipes];
+      updatedGlobalRecipes[action.payload.index] = updatedGlobalRecipe;
+
+      return {
+        ...state,
+        globalRecipes: updatedGlobalRecipes
+      };
     case RecipesActions.DELETE_RECIPE:
       return {
         ...state,
         recipes: state.recipes.filter((recipe, index) => {
+          return index !== action.payload;
+        })
+      };
+    case RecipesActions.DELETE_GLOBAL_RECIPE:
+      return {
+        ...state,
+        globalRecipes: state.globalRecipes.filter((globalRecipe, index) => {
           return index !== action.payload;
         })
       };

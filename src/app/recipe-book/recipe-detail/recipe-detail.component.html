@@ -12,14 +12,14 @@
     <div class="col-xs-12">
         <div class="btn-group" appDropdown>
             <button class="btn btn-primary dropdown-toggle">
-            Manage Recipe 
+            Manage Recipe
             <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a style="cursor: pointer"
                     (click)="toShoppingList()">Add To Shopping List</a></li>
                 <li><a style="cursor: pointer" routerLink="edit">Edit Recipe</a></li>
-                <li *ngIf="id===0?false:true"><a style="cursor: pointer" (click)="onDelete()">Delete Recipe</a></li>
+                <li ><a style="cursor: pointer" (click)="onDelete()">Delete Recipe</a></li>
             </ul>
         </div>
     </div>
@@ -43,6 +43,7 @@
     </div>
 </div>
 <br>
-<br>    
 <br>
 <br>
+<br>
+<!-- *ngIf="id===0?false:true" -->
